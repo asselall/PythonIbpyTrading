@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 accountNumber = "DU194566"
 nextValidId = 0
 bidPrice = 0
-newDataList = []
+closePrice = []
 dataDownload = []
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
@@ -33,7 +33,7 @@ def get_bid_price (msg):
         bidPrice = msg.price
         tickerID = msg.tickerId
         dataDownload.append(bidPrice)
-        newDataList.append(tickerID)
+        closePrice.append(tickerID)
 
 def create_bracket_order(parentOrderId,action, quantity, limitPrice, conn, contract):
         bracketOrders = []
@@ -111,7 +111,7 @@ def cancel_request_real_time_bars(conn, tickerID):
     conn.cancelRealTimeBars(tickerID)
 
 def historical_data_handler(msg):
-    global newDataList
+    global closePrice
     print (msg.reqId, msg.date, msg.close)
     if ('finished' in str(msg.date)) == False:
         new_symbol = 'IBUS500'
@@ -130,7 +130,7 @@ def historical_data_handler(msg):
 
 def animate(i):
     ax1.clear()
-    ax1.plot(newDataList, dataDownload)
+    ax1.plot(closePrice, dataDownload)
 
 def main():
     conn = ibConnection(port= 7496, clientId= 100)
